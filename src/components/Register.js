@@ -1,7 +1,9 @@
-import React, {Component} from "react";
 import './Connexion.css'
 
-class Connexion extends Component {
+import React, {Component} from "react";
+import {Redirect} from 'react-router-dom'
+
+class Register extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -46,7 +48,7 @@ class Connexion extends Component {
     handleSubmit(event) {
         event.preventDefault()
         let isChecked = this.checkDataUsers(this.state)
-        if(!isChecked.result) {
+        if (!isChecked.result) {
             document.body.querySelector('#isCheckedUsername').innerHTML = isChecked.message
             return
         }
@@ -65,24 +67,31 @@ class Connexion extends Component {
     }
 
     render() {
+        if (this.props.session.started) {
+            return <Redirect to='/'/>
+        }
 
         return (
-            <form onSubmit={this.handleSubmit} className="formConnect">
-                <div className="form-group">
-                    <label htmlFor="username">Username</label>
-                    <input type="text" className='form-control' value={this.state.username}
-                           onChange={this.handleOnChange} name='username' id='username'/>
-                    <span id='isCheckedUsername'></span>
-                </div>
-                <div className="form-group">
-                    <label htmlFor="pw">Password</label>
-                    <input type="password" className='form-control' value={this.state.pw} onChange={this.handleOnChange}
-                           name='pw' id='pw'/>
-                </div>
-                <button type="submit" className='btn btn-info'>SAVE</button>
-            </form>
+            <div className="container">
+                <h1>REGISTER</h1>
+                <form onSubmit={this.handleSubmit} className="formConnect">
+                    <div className="form-group">
+                        <label htmlFor="username">Type Username</label>
+                        <input type="text" className='form-control' value={this.state.username}
+                               onChange={this.handleOnChange} name='username' id='username'/>
+                        <span id='isCheckedUsername'></span>
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="pw">Type Password</label>
+                        <input type="password" className='form-control' value={this.state.pw}
+                               onChange={this.handleOnChange}
+                               name='pw' id='pw'/>
+                    </div>
+                    <button type="submit" className='btn btn-info'>SAVE</button>
+                </form>
+            </div>
         )
     }
 }
 
-export default Connexion
+export default Register
