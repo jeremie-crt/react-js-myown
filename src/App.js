@@ -67,8 +67,10 @@ class App extends Component {
         const About = () => <p>About</p>
         const Account = () => <p>Account</p>
 
-        const Logout = (props) => {
-            props.logout()
+        const Logout = ({ logout, session }) => {
+            if(session.started) {
+                logout()
+            }
 
             return <Redirect to='/' />
         }
@@ -113,7 +115,10 @@ class App extends Component {
                             />
                         </Route>
                         <Route path='/signout'>
-                            <Logout logout={this.logOut}/>
+                            <Logout
+                                logout={this.logOut}
+                                session={this.state.session}
+                            />
                         </Route>
                     </Switch>
 
