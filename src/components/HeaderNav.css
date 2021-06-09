@@ -1,0 +1,6 @@
+.signing.hidden, .logout.hidden {
+    display: none;
+}
+.signing.show, .logout.show {
+    display: block;
+}

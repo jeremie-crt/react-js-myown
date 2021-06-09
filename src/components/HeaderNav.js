@@ -1,7 +1,22 @@
-import React from "react";
+import React, {useContext} from "react";
 import { Link} from "react-router-dom";
 
+import sessionContext from "../MyContext";
+import './HeaderNav.css'
+
 const HeaderNav = (props) => {
+
+    let context = useContext(sessionContext)
+
+    let hideSigns = context.state ? 'hidden' : 'show';
+    let hideLogout = context.state ? 'show' : 'hidden';
+
+    setTimeout(() => {
+        document.body.querySelectorAll('.signing').forEach(item => {
+            item.classList.add(hideSigns)
+        })
+        document.body.querySelector('.logout').classList.add(hideLogout)
+    }, 50)
 
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -33,9 +48,9 @@ const HeaderNav = (props) => {
             <div className="">
                 <ul className="navbar-nav">
                     <li className="nav-item">
-                        <Link to='/signin' className="nav-link">SignIn<span className="sr-only">(current)</span></Link>
-                        <Link to='/signup' className="nav-link">SignUp<span className="sr-only">(current)</span></Link>
-                        <Link to='/signout' className="nav-link">SignOut<span className="sr-only">(current)</span></Link>
+                        <Link to='/signin' className="nav-link signing">SignIn<span className="sr-only">(current)</span></Link>
+                        <Link to='/signup' className="nav-link signing">SignUp<span className="sr-only">(current)</span></Link>
+                        <Link to='/signout' className="nav-link logout">SignOut<span className="sr-only">(current)</span></Link>
                     </li>
                 </ul>
             </div>
