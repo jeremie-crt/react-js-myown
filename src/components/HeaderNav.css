@@ -1,6 +1,6 @@
-.signing.hidden, .logout.hidden {
+.signing.hidden, .logout.hidden, .dropmenu-account.hidden {
     display: none;
 }
-.signing.show, .logout.show {
+.signing.show, .logout.show, .dropmenu-account.show {
     display: block;
 }

@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import './Connexion.css'
 import {Redirect} from "react-router-dom";
 
-class Register extends Component {
+class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -35,7 +35,7 @@ class Register extends Component {
     }
 
     connection(userId) {
-        this.props.logUser(userId)
+        this.props.logInUser(userId)
 
         this.setState({
             username: '',
@@ -96,4 +96,4 @@ class Register extends Component {
     }
 }
 
-export default Register
+export default Login

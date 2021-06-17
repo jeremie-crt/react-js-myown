@@ -1,31 +1,25 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css'
-import React, {Component, createContext, useContext} from "react";
+import React, {Component, useContext} from "react";
 import {BrowserRouter, Link, Route, Switch, Redirect} from "react-router-dom";
 
+//Bootstrap element
 import {Button} from "react-bootstrap";
 
+//Custom Components
 import Register from "./components/Register";
 import Login from "./components/Login";
 
+//Custom Stateless Components
+import Error404 from "./components/Error404";
 import HeaderNav from "./components/HeaderNav";
 import ContentHtml from "./components/ContentHtml";
+import Articles from "./components/Articles";
+import Account from "./components/Account";
+
+//Imported Context
 import sessionContext from "./MyContext";
 
-const Articles = () => {
-    //let auth = useSessionAuth()
-    return (
-        <sessionContext.Consumer>
-            {
-                value => {
-                    console.log('Articles VALUE', value.state)
-                    let state = value.state ? 'true' : 'false'
-                    return <p>Session state: {state}</p>
-                }
-            }
-        </sessionContext.Consumer>
-    )
-}
 
 const About = () => {
     let auth = useSessionAuth()
@@ -34,8 +28,6 @@ const About = () => {
         <p>About</p>
     )
 }
-
-const Account = () => <p>Account</p>
 
 const Logout = ({logout, session}) => {
     let auth = useSessionAuth()
@@ -55,6 +47,7 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            //List of all users registered
             users: {},
             session: {
                 started: false,
@@ -63,7 +56,7 @@ class App extends Component {
         }
 
         this.saveNewUser = this.saveNewUser.bind(this)
-        this.logUser = this.logUser.bind(this)
+        this.logInUser = this.logInUser.bind(this)
         this.logOut = this.logOut.bind(this)
     }
 
@@ -78,12 +71,12 @@ class App extends Component {
         let id = `user-${Date.now()}`
         users[id] = user
 
-        this.setState({users})
+        this.setState({ users })
         localStorage.setItem('listUsers', JSON.stringify(users))
-        this.logUser(id, users)
+        this.logInUser(id, users)
     }
 
-    logUser(userId, list) {
+    logInUser(userId, list) {
         const session = {...this.state.session}
 
         const user = list[userId]
@@ -140,20 +133,16 @@ class App extends Component {
                         </div>
 
                         <Switch>
-                            <Route path='/articles'>
-                                <Articles/>
-                            </Route>
+                            <Route path='/articles' component={Articles} />
                             <Route path='/about'>
                                 <About/>
                             </Route>
-                            <Route path='/myaccount'>
-                                <Account/>
-                            </Route>
+                            <Route path='/myaccount' component={Account} />
                             <Route path='/signin'>
                                 <Login
                                     listUsers={this.state.users}
                                     saveNewUser={this.saveNewUser}
-                                    logUser={this.logUser}
+                                    logInUser={this.logInUser}
                                     session={this.state.session}
                                 />
                             </Route>
@@ -168,6 +157,9 @@ class App extends Component {
                                 <Logout
                                     logout={this.logOut}
                                 />
+                            </Route>
+                            <Route path='*'>
+                                <Error404/>
                             </Route>
                         </Switch>
 
