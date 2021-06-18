@@ -158,38 +158,40 @@ class App extends Component {
                                     logout={this.logOut}
                                 />
                             </Route>
+                            <Route path='/'>
+                                <section className='mt-5'>
+                                    <div className="row">
+                                        <p>HomePage</p>
+                                        <p>Collaboratively recaptiualize just in time total linkage via exceptional resources.
+                                            Continually plagiarize extensible results rather than ethical channels. Rapidiously
+                                            transition interactive infomediaries via leveraged functionalities. Proactively
+                                            impact
+                                            multimedia based metrics after covalent functionalities. Seamlessly transition
+                                            front-end
+                                            partnerships via resource maximizing ideas.
+
+                                            Monotonectally formulate collaborative leadership with inexpensive models.
+                                            Progressively
+                                            transform timely convergence whereas standards compliant convergence. Assertively
+                                            build
+                                            go forward testing procedures before flexible ideas. Phosfluorescently synthesize
+                                            out-of-the-box applications without multimedia based benefits. Assertively monetize
+                                            prospective results via customized collaboration and idea-sharing.
+
+                                            Efficiently re-engineer interdependent expertise through B2B functionalities.
+                                            Dynamically morph leveraged growth strategies without equity invested manufactured
+                                            products. Progressively mesh cross-unit niches rather than efficient communities.
+                                            Quickly engineer multidisciplinary models after robust convergence. Objectively
+                                            transition parallel partnerships after innovative meta-services.
+                                        </p>
+                                        <Button className='mb-5'>CLICK ON IT</Button>
+                                    </div>
+                                </section>
+                            </Route>
                             <Route path='*'>
                                 <Error404/>
                             </Route>
                         </Switch>
-
-                        <section className='mt-5'>
-                            <div className="row">
-                                <p>Collaboratively recaptiualize just in time total linkage via exceptional resources.
-                                    Continually plagiarize extensible results rather than ethical channels. Rapidiously
-                                    transition interactive infomediaries via leveraged functionalities. Proactively
-                                    impact
-                                    multimedia based metrics after covalent functionalities. Seamlessly transition
-                                    front-end
-                                    partnerships via resource maximizing ideas.
-
-                                    Monotonectally formulate collaborative leadership with inexpensive models.
-                                    Progressively
-                                    transform timely convergence whereas standards compliant convergence. Assertively
-                                    build
-                                    go forward testing procedures before flexible ideas. Phosfluorescently synthesize
-                                    out-of-the-box applications without multimedia based benefits. Assertively monetize
-                                    prospective results via customized collaboration and idea-sharing.
-
-                                    Efficiently re-engineer interdependent expertise through B2B functionalities.
-                                    Dynamically morph leveraged growth strategies without equity invested manufactured
-                                    products. Progressively mesh cross-unit niches rather than efficient communities.
-                                    Quickly engineer multidisciplinary models after robust convergence. Objectively
-                                    transition parallel partnerships after innovative meta-services.
-                                </p>
-                                <Button className='mb-5'>CLICK ON IT</Button>
-                            </div>
-                        </section>
                     </div>
                 </SessionProvider>
 
