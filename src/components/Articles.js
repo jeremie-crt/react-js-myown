@@ -20,7 +20,7 @@ class Articles extends Component {
 
                                 <Route exact path={`${this.props.match.url}/view-article/:id`} component={ViewArticle}/>
 
-                                <Route path='*' component={Error404}/>
+                                <Route component={Error404}/>
 
                             </Fragment>
                         )

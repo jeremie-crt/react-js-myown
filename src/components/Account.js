@@ -1,5 +1,5 @@
-import React, { Component, Fragment } from 'react'
-import {BrowserRouter, Link, Route, Switch, Redirect } from "react-router-dom";
+import React, {Component} from 'react'
+import {BrowserRouter, Link, Route, Switch, Redirect} from "react-router-dom";
 
 import sessionContext from "../MyContext";
 
@@ -15,20 +15,25 @@ class Account extends Component {
             <sessionContext.Consumer>
                 {
                     value => {
-                        if(value.state) {
+                        if (value.state) {
                             return (
-                                <BrowserRouter>
-                                    <Switch>
-                                        <Route exact path={`${this.props.match.url}/infos`} component={Infos}/>
+                                <Switch>
 
-                                        <Route exact path={`${this.props.match.url}/articles`} component={UserArticles}/>
-                                    </Switch>
-                                </BrowserRouter>
+                                    <Route exact path={`${this.props.match.url}/infos`}>
+                                        <Infos
+                                            saveUserInfo={this.props.saveUserInfo}
+                                            userInfo={this.props.userInfo}
+                                        />
+                                    </Route>
 
+                                    <Route exact path={`${this.props.match.url}/articles`} component={UserArticles}/>
+
+                                    <Route component={Error404}/>
+                                </Switch>
                             )
 
                         } else {
-                            return <Redirect to='/' />
+                            return <Redirect to='/'/>
                         }
                     }
                 }

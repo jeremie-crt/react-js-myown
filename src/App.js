@@ -1,7 +1,7 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css'
-import React, {Component, useContext} from "react";
-import {BrowserRouter, Link, Route, Switch, Redirect} from "react-router-dom";
+import React, { Component } from "react";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 //Bootstrap element
 import {Button} from "react-bootstrap";
@@ -16,32 +16,12 @@ import HeaderNav from "./components/HeaderNav";
 import ContentHtml from "./components/ContentHtml";
 import Articles from "./components/Articles";
 import Account from "./components/Account";
+import About from "./components/About";
+import Logout from "./components/Logout";
 
 //Imported Context
 import sessionContext from "./MyContext";
 
-
-const About = () => {
-    let auth = useSessionAuth()
-    console.log('auth About', auth)
-    return (
-        <p>About</p>
-    )
-}
-
-const Logout = ({logout, session}) => {
-    let auth = useSessionAuth()
-    if (auth.state) {
-        logout()
-    }
-
-    return <Redirect to='/'/>
-}
-
-
-function useSessionAuth() {
-    return useContext(sessionContext)
-}
 
 class App extends Component {
     constructor(props) {
@@ -51,11 +31,23 @@ class App extends Component {
             users: {},
             session: {
                 started: false,
-                user: {id: '', username: ''}
+                user: {id: '', username: ''},
+                userInfo: {
+                    username: '',
+                    firstname: '',
+                    lastname: '',
+                    email: '',
+                    address: '',
+                    zipcode: '',
+                    birthdate: '',
+                    mobile: '',
+                    phone: '',
+                }
             }
         }
 
         this.saveNewUser = this.saveNewUser.bind(this)
+        this.saveUserInfo = this.saveUserInfo.bind(this)
         this.logInUser = this.logInUser.bind(this)
         this.logOut = this.logOut.bind(this)
     }
@@ -76,6 +68,13 @@ class App extends Component {
         this.logInUser(id, users)
     }
 
+    saveUserInfo(user) {
+        const session = { ...this.state.session }
+        session.userInfo = user
+
+        this.setState( { session })
+    }
+
     logInUser(userId, list) {
         const session = {...this.state.session}
 
@@ -83,6 +82,7 @@ class App extends Component {
         session.started = true
         session.user.id = userId
         session.user.username = user.username
+        session.userInfo.username = user.username
 
         this.setState({session})
     }
@@ -126,7 +126,7 @@ class App extends Component {
                         <ContentHtml/>
 
                         <div className="row">
-                            <h1 className='mt-2'>Hello</h1>
+                            <h1 className='mt-2'>Slider Text</h1>
                             <p>Phosfluorescently extend impactful process improvements rather than open-source quality
                                 vectors. Efficiently syndicate stand-alone quality vectors for innovative solutions.
                                 Authoritatively morph virtual infrastructures before diverse testing.</p>
@@ -137,7 +137,13 @@ class App extends Component {
                             <Route path='/about'>
                                 <About/>
                             </Route>
-                            <Route path='/myaccount' component={Account} />
+
+                            <Route path='/myaccount' render={(props) =>
+                                <Account {...props}
+                                         saveUserInfo={this.saveUserInfo }
+                                         userInfo={this.state.session.userInfo }
+                                /> }/>
+
                             <Route path='/signin'>
                                 <Login
                                     listUsers={this.state.users}
@@ -161,7 +167,7 @@ class App extends Component {
                             <Route path='/'>
                                 <section className='mt-5'>
                                     <div className="row">
-                                        <p>HomePage</p>
+                                        <h3>HomePage</h3>
                                         <p>Collaboratively recaptiualize just in time total linkage via exceptional resources.
                                             Continually plagiarize extensible results rather than ethical channels. Rapidiously
                                             transition interactive infomediaries via leveraged functionalities. Proactively
@@ -188,9 +194,8 @@ class App extends Component {
                                     </div>
                                 </section>
                             </Route>
-                            <Route path='*'>
-                                <Error404/>
-                            </Route>
+
+                            <Route component={Error404} />
                         </Switch>
                     </div>
                 </SessionProvider>
