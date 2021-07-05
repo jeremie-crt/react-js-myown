@@ -1,0 +1,19 @@
+.success-input {
+    border: solid 1px #00ca0f;
+    background: url('../assets/valid.svg') no-repeat;
+    background-position: top right;
+}
+
+.error-input {
+    border: solid 1px #ec0101;
+    background: url('../assets/cross.svg') no-repeat;
+    background-position: top right;
+}
+
+.error-span .success {
+    color: #00ca0f;
+}
+
+.error-span .error {
+    color: #ec0101;
+}

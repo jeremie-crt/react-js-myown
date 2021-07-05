@@ -1,7 +1,7 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css'
-import React, { Component } from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import React, {Component} from "react";
+import {BrowserRouter, Route, Switch} from "react-router-dom";
 
 //Bootstrap element
 import {Button} from "react-bootstrap";
@@ -13,7 +13,9 @@ import Login from "./components/Login";
 //Custom Stateless Components
 import Error404 from "./components/Error404";
 import HeaderNav from "./components/HeaderNav";
+import Footer from "./components/Footer";
 import ContentHtml from "./components/ContentHtml";
+
 import Articles from "./components/Articles";
 import Account from "./components/Account";
 import About from "./components/About";
@@ -42,6 +44,7 @@ class App extends Component {
                     birthdate: '',
                     mobile: '',
                     phone: '',
+                    informations: '',
                 }
             }
         }
@@ -63,16 +66,16 @@ class App extends Component {
         let id = `user-${Date.now()}`
         users[id] = user
 
-        this.setState({ users })
+        this.setState({users})
         localStorage.setItem('listUsers', JSON.stringify(users))
         this.logInUser(id, users)
     }
 
     saveUserInfo(user) {
-        const session = { ...this.state.session }
+        const session = {...this.state.session}
         session.userInfo = user
 
-        this.setState( { session })
+        this.setState({session})
     }
 
     logInUser(userId, list) {
@@ -133,16 +136,19 @@ class App extends Component {
                         </div>
 
                         <Switch>
-                            <Route path='/articles' component={Articles} />
+                            <Route path='/articles' component={Articles}/>
                             <Route path='/about'>
                                 <About/>
                             </Route>
 
-                            <Route path='/myaccount' render={(props) =>
-                                <Account {...props}
-                                         saveUserInfo={this.saveUserInfo }
-                                         userInfo={this.state.session.userInfo }
-                                /> }/>
+                            <Route path='/myaccount'
+                                   render={(props) =>
+                                       <Account {...props}
+                                                saveUserInfo={this.saveUserInfo}
+                                                userInfo={this.state.session.userInfo}
+                                       />
+                                   }
+                            />
 
                             <Route path='/signin'>
                                 <Login
@@ -168,26 +174,37 @@ class App extends Component {
                                 <section className='mt-5'>
                                     <div className="row">
                                         <h3>HomePage</h3>
-                                        <p>Collaboratively recaptiualize just in time total linkage via exceptional resources.
-                                            Continually plagiarize extensible results rather than ethical channels. Rapidiously
-                                            transition interactive infomediaries via leveraged functionalities. Proactively
+                                        <p>Collaboratively recaptiualize just in time total linkage via exceptional
+                                            resources.
+                                            Continually plagiarize extensible results rather than ethical channels.
+                                            Rapidiously
+                                            transition interactive infomediaries via leveraged functionalities.
+                                            Proactively
                                             impact
-                                            multimedia based metrics after covalent functionalities. Seamlessly transition
+                                            multimedia based metrics after covalent functionalities. Seamlessly
+                                            transition
                                             front-end
                                             partnerships via resource maximizing ideas.
 
                                             Monotonectally formulate collaborative leadership with inexpensive models.
                                             Progressively
-                                            transform timely convergence whereas standards compliant convergence. Assertively
+                                            transform timely convergence whereas standards compliant convergence.
+                                            Assertively
                                             build
-                                            go forward testing procedures before flexible ideas. Phosfluorescently synthesize
-                                            out-of-the-box applications without multimedia based benefits. Assertively monetize
+                                            go forward testing procedures before flexible ideas. Phosfluorescently
+                                            synthesize
+                                            out-of-the-box applications without multimedia based benefits. Assertively
+                                            monetize
                                             prospective results via customized collaboration and idea-sharing.
 
-                                            Efficiently re-engineer interdependent expertise through B2B functionalities.
-                                            Dynamically morph leveraged growth strategies without equity invested manufactured
-                                            products. Progressively mesh cross-unit niches rather than efficient communities.
-                                            Quickly engineer multidisciplinary models after robust convergence. Objectively
+                                            Efficiently re-engineer interdependent expertise through B2B
+                                            functionalities.
+                                            Dynamically morph leveraged growth strategies without equity invested
+                                            manufactured
+                                            products. Progressively mesh cross-unit niches rather than efficient
+                                            communities.
+                                            Quickly engineer multidisciplinary models after robust convergence.
+                                            Objectively
                                             transition parallel partnerships after innovative meta-services.
                                         </p>
                                         <Button className='mb-5'>CLICK ON IT</Button>
@@ -195,8 +212,11 @@ class App extends Component {
                                 </section>
                             </Route>
 
-                            <Route component={Error404} />
+                            <Route component={Error404}/>
                         </Switch>
+
+                        <Footer/>
+
                     </div>
                 </SessionProvider>
 
