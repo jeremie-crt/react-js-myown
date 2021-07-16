@@ -41,7 +41,7 @@ class App extends Component {
                     email: '',
                     address: '',
                     zipcode: '',
-                    birthdate: '',
+                    birthdate: { day:'', month:'', year:''},
                     mobile: '',
                     phone: '',
                     informations: '',

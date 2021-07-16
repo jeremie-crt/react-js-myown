@@ -1,3 +1,9 @@
+.iti__flag {background-image: url("../../node_modules/intl-tel-input/build/img/flags.png");}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .iti__flag {background-image: url("../../node_modules/intl-tel-input/build/img/flags@2x.png");}
+}
+
 .success-input {
     border: solid 1px #00ca0f;
     background: url('../assets/valid.svg') no-repeat;
@@ -16,4 +22,20 @@
 
 .error-span .error {
     color: #ec0101;
+}
+
+.birthdate-fields li {
+    vertical-align: top;
+}
+.birthdate-fields input {
+    padding: 6px;
+}
+#b_day {
+    width: 40px;
+}
+#b_month {
+    width: 60px;
+}
+#b_year {
+    width: 55px;
 }
