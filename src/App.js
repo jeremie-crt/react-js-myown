@@ -33,7 +33,7 @@ class App extends Component {
             users: {},
             session: {
                 started: false,
-                user: {id: '', username: ''},
+                user: { id: '', username: '' },
                 userInfo: {
                     username: '',
                     firstname: '',

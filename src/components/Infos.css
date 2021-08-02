@@ -3,6 +3,9 @@
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
     .iti__flag {background-image: url("../../node_modules/intl-tel-input/build/img/flags@2x.png");}
 }
+.intl-tel-input {
+    display: block;
+}
 
 .success-input {
     border: solid 1px #00ca0f;

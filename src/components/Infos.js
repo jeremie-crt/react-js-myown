@@ -1,5 +1,6 @@
-import React, {useState} from 'react'
-import intTelInput from 'intl-tel-input'
+import React, {useEffect, useState} from 'react'
+import IntTelInput from 'react-intl-tel-input'
+import 'react-intl-tel-input/dist/main.css'
 
 import './Infos.css'
 
@@ -12,32 +13,52 @@ const Infos = (props) => {
         setUser({...user, [name]: value})
     }
 
-/*    const handleOnChangeBirthdate = (e) => {
+   const handleOnChangeBirthdate = (e) => {
         const {name, value} = e.target
 
         let copyUser = { ...user }
-        let copyBday = copyUser.birthdate
+        let birthdate = copyUser.birthdate
 
-        if(name === 'day') {
-            copyBday.day = value
-        } else if(name === 'month') {
-            copyBday.month = value
-        } else if(name === 'year') {
-            copyBday.year = value
+        if(name === 'b_day') {
+            birthdate.day = value
+        } else if(name === 'b_month') {
+            birthdate.month = value
+        } else if(name === 'b_year') {
+            birthdate.year = value
         }
 
-        copyUser.birthdate = copyBday
-
-        setUser( { copyUser })
-    }*/
+       setUser( {...user, birthdate })
+    }
 
     const handleOnSubmit = (e) => {
         e.preventDefault()
         props.saveUserInfo(user)
     }
 
+    const [ geoIpData, setGeoIpData ] = useState(null)
+    useEffect(() => {
+        fetch('https://ipinfo.io/json?token=1d7d7f5b497ca5', {
+            headers: {
+                'Accept': 'application/json'
+            }
+        })
+            .then(res => res.json())
+            .then(result => {
+                    console.log('result');
+                    console.log(result);
+                    setGeoIpData(result.country)
+                }
+            )
+            .catch(error => {
+                console.log('IN CATCH ERROR');
+                console.log(error);
+            })
+    }, [])
+    
     checkInputs()
 
+    console.log('geoIpData');
+    console.log(geoIpData);
     return (
         <div className="container">
             <h1>My account - details</h1>
@@ -83,21 +104,27 @@ const Infos = (props) => {
                     <label htmlFor="birthdate">Birthdate</label>
                     <ul className="list-inline birthdate-fields">
                         <li className="list-inline-item">
-                            <input type="text" className="form-control bday-inputs" name='b_day' id='b_day'
-                                   placeholder="day" maxLength="2"
+                            <label htmlFor="b_day">day</label>
+                            <input type="text" className="form-control bday-inputs" name='b_day' id='b_day' placeholder="day" maxLength="2"
+                                   value={user.birthdate.day}
+                                   onChange={handleOnChangeBirthdate}
                             />
                             <p className="error-span"/>
                         </li>
                         <li className="list-inline-item">
-                            <input type="text" className="form-control bday-inputs" name='b_month' id='b_month'
-                                   placeholder="month" maxLength="2"
+                            <label htmlFor="b_month">month</label>
+                            <input type="text" className="form-control bday-inputs" name='b_month' id='b_month' placeholder="month" maxLength="2"
+                                   value={user.birthdate.month}
+                                   onChange={handleOnChangeBirthdate}
 
                             />
                             <p className="error-span"/>
                         </li>
                         <li className="list-inline-item">
-                            <input type="text" className="form-control bday-inputs" name='b_year' id='b_year'
-                                   placeholder="year" maxLength="4"
+                            <label htmlFor="b_year">year</label>
+                            <input type="text" className="form-control bday-inputs" name='b_year' id='b_year' placeholder="year" maxLength="4"
+                                   value={user.birthdate.year}
+                                   onChange={handleOnChangeBirthdate}
 
                             />
                             <p className="error-span"/>
@@ -116,9 +143,15 @@ const Infos = (props) => {
                 </div>
                 <div className="form-group">
                     <label htmlFor="phone">Phone</label>
-                    <input type="text" className="form-control" name='phone' value={user.phone} id='phone'
-                           placeholder="international number"
-                           onChange={handleOnChange}/>
+                    <IntTelInput
+                        containerClassName="intl-tel-input"
+                        initialCountry="auto"
+                        defaultCountry="auto"
+                        geoIpLookup={geoIpData}
+                        //defaultCountry={'fr'}
+                        inputClassName="form-control" fieldName='phone' defaultValue={user.phone} fieldId='phone'
+                        onChange={handleOnChange}
+                    />
                     <p className="error-span"/>
 
                 </div>
@@ -135,14 +168,10 @@ const Infos = (props) => {
                 <button type="submit" className='btn btn-info'>EDIT</button>
             </form>
         </div>
-
-
-
     )
 }
+const phoneInputField = document.querySelector('#phone')
 
-
-checkInputs()
 function checkInputs() {
     document.querySelectorAll('input')
         .forEach(item => {
@@ -280,20 +309,20 @@ function checkInputs() {
                             break;
 
                         case 'phone':
-                            if (lengthValue < 9 || lengthValue > 12) {
+                       /*     if (lengthValue < 9 || lengthValue > 12) {
                                 responseReturn(input, 'error', 'The length is min 9 and max 10.')
                             } else {
-                                //regex= /(\+?)(33?)([\d]{9,10})/
-                                //if (!regex.test(inputValue)) {
-                                //  return responseReturn(input, 'error', 'The pattern is: "+33123456789"')
-                                //}
+                                regex= /(\+?)(33?)([\d]{9,10})/
+                                if (!regex.test(inputValue)) {
+                                  return responseReturn(input, 'error', 'The pattern is: "+33123456789"')
+                                }
 
-                                /*    if (phoneInput !== 'undefined' && !phoneInput.isValidNumber()) {
+                                    if (phoneInputField !== 'undefined' && !phoneInputField.isValidNumber()) {
                                         return responseReturn(input, 'error', 'The pattern is not valid must be as: "+33123456789"')
-                                    }*/
+                                    }
                                 responseReturn(input, 'success', 'Good')
 
-                            }
+                            }*/
                             break;
                         default:
                     }
@@ -328,7 +357,6 @@ function checkInputs() {
         })
 }
 
-
 function responseReturn(input, type, message) {
     let response
     if (type === 'success') {
@@ -346,17 +374,8 @@ function responseReturn(input, type, message) {
     parentElmt.querySelector('.error-span').innerHTML = response
 }
 
-/*const phoneInputField = document.querySelector('#phone')
-const phoneInput = intTelInput(phoneInputField, {
-    initialCountry: 'auto',
-    geoIpLookup: getIp,
-    separateDialCode: true,
-    preferredCountries: ['jp', 'us', 'gb'],
-    utilsScript:
-        "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
-})*/
-
 function getIp(callback) {
+    console.log('9999');
     fetch('https://ipinfo.io/json?token=1d7d7f5b497ca5', {headers: {'Accept': 'application/json'}})
         .then((resp) => resp.json())
         .catch(() => {
