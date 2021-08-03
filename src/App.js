@@ -24,6 +24,7 @@ import Logout from "./components/Logout";
 //Imported Context
 import sessionContext from "./MyContext";
 
+import ReactPlayer from 'react-player'
 
 class App extends Component {
     constructor(props) {
@@ -173,6 +174,21 @@ class App extends Component {
                             <Route path='/'>
                                 <section className='mt-5'>
                                     <div className="row">
+                                        <div className="col-12">
+                                            <div className="vm-video">
+                                                <div className="vc-container player-wrapper">
+                                                    <ReactPlayer
+                                                        volume={0}
+                                                        playing={true}
+                                                        url="https://vimeo.com/361808343"
+                                                        className="react-player"
+                                                        controls
+                                                        width="100%"
+                                                        height="300px"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
                                         <h3>HomePage</h3>
                                         <p>Collaboratively recaptiualize just in time total linkage via exceptional
                                             resources.

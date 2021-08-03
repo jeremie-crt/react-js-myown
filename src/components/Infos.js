@@ -1,15 +1,21 @@
 import React, {useEffect, useState} from 'react'
 import IntTelInput from 'react-intl-tel-input'
-import 'react-intl-tel-input/dist/main.css'
 
 import './Infos.css'
+import 'react-intl-tel-input/dist/main.css'
 
 const Infos = (props) => {
-
     const [user, setUser] = useState(props.userInfo)
 
     const handleOnChange = (e) => {
         const {name, value} = e.target
+        setUser({...user, [name]: value})
+    }
+
+    const handleOnChangePhone = () => {
+        let phone = document.querySelector('#phone')
+        let value = phone.value.replace(' ', '')
+        let name = phone.name
         setUser({...user, [name]: value})
     }
 
@@ -35,6 +41,7 @@ const Infos = (props) => {
         props.saveUserInfo(user)
     }
 
+    //GeoIp for auto selection of country phone option
     const [ geoIpData, setGeoIpData ] = useState(null)
     useEffect(() => {
         fetch('https://ipinfo.io/json?token=1d7d7f5b497ca5', {
@@ -44,21 +51,19 @@ const Infos = (props) => {
         })
             .then(res => res.json())
             .then(result => {
-                    console.log('result');
-                    console.log(result);
+                    //console.log('result');
+                    //console.log(result);
                     setGeoIpData(result.country)
                 }
             )
             .catch(error => {
-                console.log('IN CATCH ERROR');
-                console.log(error);
+                //console.log('IN CATCH ERROR');
+                //console.log(error);
             })
     }, [])
-    
+
     checkInputs()
 
-    console.log('geoIpData');
-    console.log(geoIpData);
     return (
         <div className="container">
             <h1>My account - details</h1>
@@ -141,16 +146,30 @@ const Infos = (props) => {
                     <p className="error-span"/>
 
                 </div>
-                <div className="form-group">
+                <div className="form-group phone-form-group">
                     <label htmlFor="phone">Phone</label>
                     <IntTelInput
-                        containerClassName="intl-tel-input"
+                        containerClassName="intl-tel-input "
+                        inputClassName="form-control" fieldId='phone'
+                        fieldName="phone" name="phone"
+                        defaultValue={user.phone}
+
+                        utilsScript={"https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"}
                         initialCountry="auto"
-                        defaultCountry="auto"
+                        defaultCountry="fr"
                         geoIpLookup={geoIpData}
-                        //defaultCountry={'fr'}
-                        inputClassName="form-control" fieldName='phone' defaultValue={user.phone} fieldId='phone'
-                        onChange={handleOnChange}
+                        preferredCountries={['fr', 'us', 'gb', 'jp']}
+                        onPhoneNumberChange={(status, value, countryData, number, id) => {
+                            console.log('onPhoneNumberChange status', status);
+                            console.log('onPhoneNumberChange countryData', countryData);
+                            console.log('onPhoneNumberChange value', value);
+                            console.log('onPhoneNumberChange number', number);
+                            console.log('onPhoneNumberChange id', id);
+                            handleOnChangePhone()
+                        }}
+                        onSelectFlag={(num, country) => {
+                            console.log('onSelectFlag', num, country);
+                        }}
                     />
                     <p className="error-span"/>
 
@@ -309,20 +328,22 @@ function checkInputs() {
                             break;
 
                         case 'phone':
-                       /*     if (lengthValue < 9 || lengthValue > 12) {
-                                responseReturn(input, 'error', 'The length is min 9 and max 10.')
+                            if (lengthValue < 9 || lengthValue > 15) {
+                                responseReturn(input, 'error', 'The length is min 9 and max 15.')
                             } else {
-                                regex= /(\+?)(33?)([\d]{9,10})/
-                                if (!regex.test(inputValue)) {
-                                  return responseReturn(input, 'error', 'The pattern is: "+33123456789"')
-                                }
-
-                                    if (phoneInputField !== 'undefined' && !phoneInputField.isValidNumber()) {
-                                        return responseReturn(input, 'error', 'The pattern is not valid must be as: "+33123456789"')
+                                //let regex= /(\+?)(33?)([\d]{9,10})/
+                                let regex= /^\d{1,15}$/
+                                if(document.querySelector('#phone')) {
+                                    if (!regex.test(inputValue.replace(' ', ''))) {
+                                        return responseReturn(input, 'error', 'The pattern must be with integers only.')
                                     }
-                                responseReturn(input, 'success', 'Good')
-
-                            }*/
+                                    //In VanillaJs, can get the instance and check the current input with method
+                                    // if (phoneInputField !== 'undefined' && !phoneInputField.isValidNumber()) {
+                                    //     return responseReturn(input, 'error', 'The pattern must be with integers only.')
+                                    // }
+                                    responseReturn(input, 'success', 'Good')
+                                }
+                            }
                             break;
                         default:
                     }
