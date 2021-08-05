@@ -3,9 +3,6 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import React, {Component} from "react";
 import {BrowserRouter, Route, Switch} from "react-router-dom";
 
-//Bootstrap element
-import {Button} from "react-bootstrap";
-
 //Custom Components
 import Register from "./components/Register";
 import Login from "./components/Login";
@@ -13,18 +10,18 @@ import Login from "./components/Login";
 //Custom Stateless Components
 import Error404 from "./components/Error404";
 import HeaderNav from "./components/HeaderNav";
+import HomeSlider from "./components/HomeSlider";
 import Footer from "./components/Footer";
 import ContentHtml from "./components/ContentHtml";
 
+import Homepage from "./components/Homepage";
 import Articles from "./components/Articles";
 import Account from "./components/Account";
 import About from "./components/About";
-import Logout from "./components/Logout";
 
+import Logout from "./components/Logout";
 //Imported Context
 import sessionContext from "./MyContext";
-
-import ReactPlayer from 'react-player'
 
 class App extends Component {
     constructor(props) {
@@ -34,7 +31,7 @@ class App extends Component {
             users: {},
             session: {
                 started: false,
-                user: { id: '', username: '' },
+                user: {id: '', username: ''},
                 userInfo: {
                     username: '',
                     firstname: '',
@@ -42,7 +39,7 @@ class App extends Component {
                     email: '',
                     address: '',
                     zipcode: '',
-                    birthdate: { day:'', month:'', year:''},
+                    birthdate: {day: '', month: '', year: ''},
                     mobile: '',
                     phone: '',
                     informations: '',
@@ -129,18 +126,9 @@ class App extends Component {
 
                         <ContentHtml/>
 
-                        <div className="row">
-                            <h1 className='mt-2'>Slider Text</h1>
-                            <p>Phosfluorescently extend impactful process improvements rather than open-source quality
-                                vectors. Efficiently syndicate stand-alone quality vectors for innovative solutions.
-                                Authoritatively morph virtual infrastructures before diverse testing.</p>
-                        </div>
-
                         <Switch>
                             <Route path='/articles' component={Articles}/>
-                            <Route path='/about'>
-                                <About/>
-                            </Route>
+                            <Route path='/about' component={About} />
 
                             <Route path='/myaccount'
                                    render={(props) =>
@@ -171,71 +159,14 @@ class App extends Component {
                                     logout={this.logOut}
                                 />
                             </Route>
-                            <Route path='/'>
-                                <section className='mt-5'>
-                                    <div className="row">
-                                        <div className="col-12">
-                                            <div className="vm-video">
-                                                <div className="vc-container player-wrapper">
-                                                    <ReactPlayer
-                                                        volume={0}
-                                                        playing={true}
-                                                        url="https://vimeo.com/361808343"
-                                                        className="react-player"
-                                                        controls
-                                                        width="100%"
-                                                        height="300px"
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <h3>HomePage</h3>
-                                        <p>Collaboratively recaptiualize just in time total linkage via exceptional
-                                            resources.
-                                            Continually plagiarize extensible results rather than ethical channels.
-                                            Rapidiously
-                                            transition interactive infomediaries via leveraged functionalities.
-                                            Proactively
-                                            impact
-                                            multimedia based metrics after covalent functionalities. Seamlessly
-                                            transition
-                                            front-end
-                                            partnerships via resource maximizing ideas.
-
-                                            Monotonectally formulate collaborative leadership with inexpensive models.
-                                            Progressively
-                                            transform timely convergence whereas standards compliant convergence.
-                                            Assertively
-                                            build
-                                            go forward testing procedures before flexible ideas. Phosfluorescently
-                                            synthesize
-                                            out-of-the-box applications without multimedia based benefits. Assertively
-                                            monetize
-                                            prospective results via customized collaboration and idea-sharing.
-
-                                            Efficiently re-engineer interdependent expertise through B2B
-                                            functionalities.
-                                            Dynamically morph leveraged growth strategies without equity invested
-                                            manufactured
-                                            products. Progressively mesh cross-unit niches rather than efficient
-                                            communities.
-                                            Quickly engineer multidisciplinary models after robust convergence.
-                                            Objectively
-                                            transition parallel partnerships after innovative meta-services.
-                                        </p>
-                                        <Button className='mb-5'>CLICK ON IT</Button>
-                                    </div>
-                                </section>
-                            </Route>
+                            <Route path='/' component={Homepage}/>
 
                             <Route component={Error404}/>
                         </Switch>
 
                         <Footer/>
-
                     </div>
                 </SessionProvider>
-
             </BrowserRouter>
         );
     }
