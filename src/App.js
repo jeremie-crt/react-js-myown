@@ -10,7 +10,6 @@ import Login from "./components/Login";
 //Custom Stateless Components
 import Error404 from "./components/Error404";
 import HeaderNav from "./components/HeaderNav";
-import HomeSlider from "./components/HomeSlider";
 import Footer from "./components/Footer";
 import ContentHtml from "./components/ContentHtml";
 
@@ -41,7 +40,13 @@ class App extends Component {
                     zipcode: '',
                     birthdate: {day: '', month: '', year: ''},
                     mobile: '',
-                    phone: '',
+                    phone: {
+                        number: '',
+                        rawNumber: '',
+                        country: '',
+                        dialCode: '',
+                        iso2: ''
+                    },
                     informations: '',
                 }
             }

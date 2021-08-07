@@ -12,11 +12,21 @@ const Infos = (props) => {
         setUser({...user, [name]: value})
     }
 
-    const handleOnChangePhone = () => {
-        let phone = document.querySelector('#phone')
-        let value = phone.value.replace(' ', '')
-        let name = phone.name
-        setUser({...user, [name]: value})
+    const handleOnChangePhone = (
+        rawValue,
+        formattedValue,
+        countryData,
+    ) => {
+
+        let copyUser = { ...user }
+        let phone = copyUser.phone
+        phone.number = formattedValue
+        phone.rawNumber = rawValue
+        phone.country = countryData.name
+        phone.iso2 = countryData.iso2
+        phone.dialCode = countryData.dialCode
+
+        setUser({...user, phone })
     }
 
    const handleOnChangeBirthdate = (e) => {
@@ -152,23 +162,21 @@ const Infos = (props) => {
                         containerClassName="intl-tel-input "
                         inputClassName="form-control" fieldId='phone'
                         fieldName="phone" name="phone"
-                        defaultValue={user.phone}
+                        defaultValue={user.phone.number}
 
                         utilsScript={"https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"}
                         initialCountry="auto"
                         defaultCountry="fr"
                         geoIpLookup={geoIpData}
                         preferredCountries={['fr', 'us', 'gb', 'jp']}
-                        onPhoneNumberChange={(status, value, countryData, number, id) => {
-                            console.log('onPhoneNumberChange status', status);
-                            console.log('onPhoneNumberChange countryData', countryData);
-                            console.log('onPhoneNumberChange value', value);
-                            console.log('onPhoneNumberChange number', number);
-                            console.log('onPhoneNumberChange id', id);
-                            handleOnChangePhone()
-                        }}
-                        onSelectFlag={(num, country) => {
-                            console.log('onSelectFlag', num, country);
+                        onPhoneNumberChange={(isValid, rawValue, countryData, formattedValue) => {
+                            let phoneInput = document.querySelector('#phone')
+                            if(isValid) {
+                                handleOnChangePhone(rawValue, formattedValue, countryData)
+                                return responseReturn(phoneInput, 'success', 'Current input: ' + formattedValue)
+                            } else {
+                                return responseReturn(phoneInput, 'error', 'Current input: ' + formattedValue)
+                            }
                         }}
                     />
                     <p className="error-span"/>
