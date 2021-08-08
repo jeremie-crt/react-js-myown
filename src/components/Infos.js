@@ -166,11 +166,12 @@ const Infos = (props) => {
 
                         utilsScript={"https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"}
                         initialCountry="auto"
-                        defaultCountry="fr"
+                        defaultCountry={ user.phone.iso2 ?? 'fr' }
                         geoIpLookup={geoIpData}
                         preferredCountries={['fr', 'us', 'gb', 'jp']}
                         onPhoneNumberChange={(isValid, rawValue, countryData, formattedValue) => {
                             let phoneInput = document.querySelector('#phone')
+
                             if(isValid) {
                                 handleOnChangePhone(rawValue, formattedValue, countryData)
                                 return responseReturn(phoneInput, 'success', 'Current input: ' + formattedValue)
