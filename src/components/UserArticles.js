@@ -24,8 +24,21 @@ class UserArticles extends Component {
     }
 
     handleSubmit(e) {
-        //TODO save to parent - articles list
-        //TODO - list author ? - change classicEditor
+
+        let article = this.state.article
+        let user = this.props.user
+        article.author = user.id
+        article.date = Date.now()
+
+        let formatTitle = article.title
+        article.slug = formatTitle.toLowerCase().replaceAll(' ', '-')
+
+        if(article.slug.substring(article.slug.length, article.slug.length -1) === '-') {
+            article.slug = article.slug.substring(0, article.slug.length - 1)
+        }
+
+        this.props.addNewArticle(article)
+
         //TODO check image
     }
 
@@ -45,7 +58,6 @@ class UserArticles extends Component {
         this.setState({ article })
     }
 
-
     render() {
         const article = this.state.article
 
@@ -58,25 +70,24 @@ class UserArticles extends Component {
                         <label htmlFor="title">title</label>
                         <input type="text" name='title' id='title' onChange={this.handleOnChange} value={article.title} className="form-control"/>
                     </div>
-                    <div className="form-group col-6">
-                        <label htmlFor="author">author</label>
-                        <input type="text" name='author' id='author' onChange={this.handleOnChange} value={article.author} className="form-control"/>
-                    </div>
+
                     <div className="form-group col-6 mb-5">
-                        <label htmlFor="published">published</label>
-                        <input type="text" name='published' id='published' onChange={this.handleOnChange} value={article.published} className="form-control"/>
+                        <label htmlFor="published">publishing at</label>
+                        <input type="date" name='published' id='published' onChange={this.handleOnChange} value={article.published} className="form-control"/>
                     </div>
 
-                    <h3>Text Editor - content article</h3>
-                    <CKEditor
-                        editor={ ClassicEditor }
-                        onChange={ ( event, editor ) => {
-                            const data = editor.getData();
-                            this.handleOnChangeEditor(data)
-                        } }
+                    <div className="form-group">
+                        <label htmlFor="content">Content article</label>
+                        <CKEditor
+                            editor={ ClassicEditor }
+                            onChange={ ( event, editor ) => {
+                                const data = editor.getData();
+                                this.handleOnChangeEditor(data)
+                            } }
 
-                        data={article.content}
-                    />
+                            data={article.content}
+                        />
+                    </div>
 
                     <button type='submit' className='btn btn-primary mt-3' id='submit'>SAVE</button>
                 </form>

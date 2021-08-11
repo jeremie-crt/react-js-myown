@@ -28,10 +28,12 @@ class App extends Component {
         this.state = {
             //List of all users registered
             users: {},
+            usersInfos: {},
             session: {
                 started: false,
                 user: {id: '', username: ''},
                 userInfo: {
+                    id: '',
                     username: '',
                     firstname: '',
                     lastname: '',
@@ -49,13 +51,15 @@ class App extends Component {
                     },
                     informations: '',
                 }
-            }
+            },
+            listArticles: {}
         }
 
         this.saveNewUser = this.saveNewUser.bind(this)
         this.saveUserInfo = this.saveUserInfo.bind(this)
         this.logInUser = this.logInUser.bind(this)
         this.logOut = this.logOut.bind(this)
+        this.addNewArticle = this.addNewArticle.bind(this)
     }
 
     saveNewUser(username, pw) {
@@ -64,26 +68,46 @@ class App extends Component {
             pw: pw,
             date: new Date().toLocaleDateString()
         }
-
+        //add new user to all list users
         const users = {...this.state.users}
         let id = `user-${Date.now()}`
         users[id] = user
-
         this.setState({users})
-        localStorage.setItem('listUsers', JSON.stringify(users))
+
+        //add new user id to his info
+        const session = {...this.state.session}
+        session.userInfo.id = id
+        this.setState({session})
+
         this.logInUser(id, users)
     }
 
+    addNewArticle(data) {
+        //add new user to all list users
+        const listArticles = { ...this.state.listArticles }
+        let id = `article-${data.date}`
+        listArticles[id] = data
+
+        this.setState({ listArticles })
+    }
+
+    //Save user info into the session
+    //and add it to list of usersInfos
     saveUserInfo(user) {
         const session = {...this.state.session}
         session.userInfo = user
-
         this.setState({session})
+
+        let id = session.user.id
+        const usersInfos = {...this.state.usersInfos}
+        usersInfos[id] = user
+
+        this.setState({usersInfos})
     }
 
     logInUser(userId, list) {
         const session = {...this.state.session}
-
+        //Sets in session some infos
         const user = list[userId]
         session.started = true
         session.user.id = userId
@@ -101,6 +125,7 @@ class App extends Component {
         this.setState({session})
     }
 
+    //Dispatch session info through context
     useProvideSession = () => {
         let session = {...this.state.session}
         let state = session.started
@@ -125,21 +150,27 @@ class App extends Component {
 
             <BrowserRouter>
                 <SessionProvider>
-
                     <div className='container'>
                         <HeaderNav/>
 
                         <ContentHtml/>
 
                         <Switch>
-                            <Route path='/articles' component={Articles}/>
-                            <Route path='/about' component={About} />
+                            <Route path='/articles' render={(props) =>
+                                <Articles
+                                    {...props}
+                                    listArticles={this.state.listArticles}
+                                />
+                            }/>
+
+                            <Route path='/about' component={About}/>
 
                             <Route path='/myaccount'
                                    render={(props) =>
                                        <Account {...props}
                                                 saveUserInfo={this.saveUserInfo}
                                                 userInfo={this.state.session.userInfo}
+                                                addNewArticle={this.addNewArticle}
                                        />
                                    }
                             />

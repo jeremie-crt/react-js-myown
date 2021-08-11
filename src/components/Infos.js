@@ -186,7 +186,7 @@ const Infos = (props) => {
                 <div className="form-group">
                     <label htmlFor="informations">Informations</label>
                     <textarea className="form-control" name="informations" id="informations"
-                              placeholder="Some infos about you..." rows='5'
+                              placeholder="Some infos about you..." rows='5' maxLength='300'
                               value={user.informations}
                               onChange={handleOnChange}
                     > </textarea>
@@ -254,7 +254,7 @@ function checkInputs() {
                             if (lengthValue < 3) {
                                 responseReturn(input, 'error', 'The length is at least x characters.')
                             } else {
-                                let regex = /^[a-zA-Z0-9-_éèàùûôîï]{3,}$/
+                                let regex = /^[a-zA-Z0-9-_ éèàùûôîï]{3,}$/
                                 if (!regex.test(inputValue)) {
                                     return responseReturn(input, 'error', 'The pattern must be with characters, integers, underscores and hyphens only.')
                                 }
@@ -373,9 +373,9 @@ function checkInputs() {
                         case 'informations':
                             if (lengthValue < 10) {
                                 responseReturn(element, 'error', 'The length is at least 10 characters.')
-                            } else if (lengthValue > 200) {
+                            } else if (lengthValue > 300) {
 
-                                responseReturn(element, 'error', 'The length cannot be more than 200 characters.')
+                                responseReturn(element, 'error', 'The length cannot be more than 300 characters.')
                             } else {
                                 responseReturn(element, 'success', 'Good')
                             }

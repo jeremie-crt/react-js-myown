@@ -26,7 +26,12 @@ class Account extends Component {
                                         />
                                     </Route>
 
-                                    <Route exact path={`${this.props.match.url}/articles`} component={UserArticles}/>
+                                    <Route exact path={`${this.props.match.url}/articles`}>
+                                        <UserArticles
+                                        addNewArticle={this.props.addNewArticle}
+                                        user={value.user}
+                                        />
+                                        </Route>
 
                                     <Route component={Error404}/>
                                 </Switch>

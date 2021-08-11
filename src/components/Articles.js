@@ -16,7 +16,12 @@ class Articles extends Component {
                     value => {
                         return (
                             <Fragment>
-                                <Route exact path={`${this.props.match.url}/list-articles`} component={ListArticles}/>
+                                <Route exact path={`${this.props.match.url}/list-articles`}  render={(props) =>
+                                    <ListArticles
+                                        {...props}
+                                        listArticles={this.props.listArticles}
+                                    />
+                                }/>
 
                                 <Route exact path={`${this.props.match.url}/view-article/:id`} component={ViewArticle}/>
 
