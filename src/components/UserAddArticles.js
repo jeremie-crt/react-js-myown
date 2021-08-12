@@ -4,7 +4,7 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 import './UserArticles.css'
 
-class UserArticles extends Component {
+class UserAddArticles extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -30,7 +30,12 @@ class UserArticles extends Component {
         article.author = user.id
         article.date = Date.now()
 
+        if(article.title.substring(article.title.length, article.title.length -1) === ' ') {
+            article.title = article.title.substring(0, article.title.length - 1)
+        }
+
         let formatTitle = article.title
+
         article.slug = formatTitle.toLowerCase().replaceAll(' ', '-')
 
         if(article.slug.substring(article.slug.length, article.slug.length -1) === '-') {
@@ -96,4 +101,4 @@ class UserArticles extends Component {
     }
 }
 
-export default UserArticles
+export default UserAddArticles

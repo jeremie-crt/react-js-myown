@@ -4,7 +4,7 @@ import {BrowserRouter, Link, Route, Switch, Redirect} from "react-router-dom";
 import sessionContext from "../MyContext";
 
 import Infos from "./Infos";
-import UserArticles from "./UserArticles";
+import UserAddArticles from "./UserAddArticles";
 import Error404 from "./Error404";
 
 class Account extends Component {
@@ -27,7 +27,7 @@ class Account extends Component {
                                     </Route>
 
                                     <Route exact path={`${this.props.match.url}/articles`}>
-                                        <UserArticles
+                                        <UserAddArticles
                                         addNewArticle={this.props.addNewArticle}
                                         user={value.user}
                                         />
