@@ -3,6 +3,7 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 import './UserArticles.css'
+import {Form} from "react-bootstrap";
 
 class UserAddArticles extends Component {
     constructor(props) {
@@ -15,11 +16,16 @@ class UserAddArticles extends Component {
                 slug: '',
                 published: '',
                 date: ''
-            }
+            },
+            selectedFile: '',
+            isFilePicked: false,
+
         }
 
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleOnChange = this.handleOnChange.bind(this)
+        this.handleSubmission = this.handleSubmission.bind(this)
+        this.handleOnChangeFile = this.handleOnChangeFile.bind(this)
         this.handleOnChangeEditor = this.handleOnChangeEditor.bind(this)
     }
 
@@ -42,9 +48,8 @@ class UserAddArticles extends Component {
             article.slug = article.slug.substring(0, article.slug.length - 1)
         }
 
-        this.props.addNewArticle(article)
 
-        //TODO check image
+        //this.props.addNewArticle(article)
     }
 
     handleOnChange(event) {
@@ -57,6 +62,46 @@ class UserAddArticles extends Component {
         this.setState({ article })
     }
 
+    handleOnChangeFile(event) {
+        const target = event.target
+        this.setState({ selectedFile: target.files[0] })
+        this.setState({ isFilePicked: true })
+    }
+
+    handleSubmission(event) {
+        event.preventDefault()
+        //File Upload
+        const formData = new FormData();
+        console.log(this.state.selectedFile)
+        console.log(formData)
+        formData.append('image', this.state.selectedFile)
+        console.log('formData', formData)
+
+        let settings = {
+            "url": "https://api.imgbb.com/1/upload?key=8d5867a9512390fb5e5dc97839aa36f6",
+            "method": "POST",
+            "timeout": 0,
+            "processData": false,
+            "mimeType": "multipart/form-data",
+            "contentType": false,
+            "data": formData
+        };
+
+        fetch(settings
+        )
+            .then((response) => {
+                console.log(response)
+                return response.json()
+            })
+            .then((result) => {
+                console.log('Success:', result);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    }
+
+
     handleOnChangeEditor(data) {
         const article = { ...this.state.article }
         article.content = data
@@ -65,6 +110,7 @@ class UserAddArticles extends Component {
 
     render() {
         const article = this.state.article
+        const selectedFile = this.state.selectedFile
 
         return (
             <div className="wrapper-editor">
@@ -81,6 +127,24 @@ class UserAddArticles extends Component {
                         <input type="date" name='published' id='published' onChange={this.handleOnChange} value={article.published} className="form-control"/>
                     </div>
 
+                    <div className="form-group col-6 mb-5">
+                        <label htmlFor="file">uploadFile</label>
+                        <input type="file" name='file' id='file' onChange={this.handleOnChangeFile} className="form-control"/>
+                        {this.state.isFilePicked ? (
+                            <div>
+                                <p>Filename: {selectedFile.name}</p>
+                                <p>Filetype: {selectedFile.type}</p>
+                                <p>Size in bytes: {selectedFile.size}</p>
+                                <p>
+                                    lastModifiedDate:{' '}
+                                    {selectedFile.lastModifiedDate.toLocaleDateString()}
+                                </p>
+                            </div>
+                        ) : (
+                            <p>Select a file to show details</p>
+                        )}
+                    </div>
+
                     <div className="form-group">
                         <label htmlFor="content">Content article</label>
                         <CKEditor
@@ -94,7 +158,7 @@ class UserAddArticles extends Component {
                         />
                     </div>
 
-                    <button type='submit' className='btn btn-primary mt-3' id='submit'>SAVE</button>
+                    <button type='submit' className='btn btn-primary mt-3' id='submit' onClick={this.handleSubmission}>SAVE</button>
                 </form>
             </div>
         )
