@@ -9,7 +9,6 @@ class ListArticles extends Component {
         this.amountArticles = Object.keys(this.listArticles).length
     }
 
-
     render() {
 
         function createMarkup(text) {
@@ -19,14 +18,13 @@ class ListArticles extends Component {
             return text.substr(0, 150)
         }
 
-
         const card = (data, index) => {
 
             let textContent = createMarkup( reduceTextLength(data.content, 0, 150).toLowerCase() + '...')
 
             return (
                 <div key={index} className="card" style={{width: '18rem'}}>
-                    <img className="card-img-top" src="..." alt="Card image cap"/>
+                    <img className="card-img-top" src={data.picture.url} alt="Card image cap"/>
                         <div className="card-body">
                             <h5 className="card-title">{data.title}</h5>
                                 <div className="card-text" dangerouslySetInnerHTML={textContent}/>

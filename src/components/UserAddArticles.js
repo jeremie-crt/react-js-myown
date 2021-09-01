@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { CKEditor } from '@ckeditor/ckeditor5-react';
+import React, {Component} from 'react'
+import {CKEditor} from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 import './UserArticles.css'
@@ -15,11 +15,13 @@ class UserAddArticles extends Component {
                 author: '',
                 slug: '',
                 published: '',
-                date: ''
+                date: '',
+                picture: {},
+                poster: '',
+                background: '',
             },
             selectedFile: '',
             isFilePicked: false,
-
         }
 
         this.handleSubmit = this.handleSubmit.bind(this)
@@ -27,29 +29,19 @@ class UserAddArticles extends Component {
         this.handleSubmission = this.handleSubmission.bind(this)
         this.handleOnChangeFile = this.handleOnChangeFile.bind(this)
         this.handleOnChangeEditor = this.handleOnChangeEditor.bind(this)
+        this.savePicture = this.savePicture.bind(this)
     }
 
-    handleSubmit(e) {
+    savePicture(data) {
+        const article = {...this.state.article}
+        article.picture = data
+        this.setState({article})
+    }
 
-        let article = this.state.article
-        let user = this.props.user
-        article.author = user.id
-        article.date = Date.now()
-
-        if(article.title.substring(article.title.length, article.title.length -1) === ' ') {
-            article.title = article.title.substring(0, article.title.length - 1)
-        }
-
-        let formatTitle = article.title
-
-        article.slug = formatTitle.toLowerCase().replaceAll(' ', '-')
-
-        if(article.slug.substring(article.slug.length, article.slug.length -1) === '-') {
-            article.slug = article.slug.substring(0, article.slug.length - 1)
-        }
-
-
-        //this.props.addNewArticle(article)
+    handleOnChangeEditor(data) {
+        const article = {...this.state.article}
+        article.content = data
+        this.setState({article})
     }
 
     handleOnChange(event) {
@@ -57,55 +49,84 @@ class UserAddArticles extends Component {
         const value = target.value
         const name = target.name
 
-        const article = { ...this.state.article }
+        const article = {...this.state.article}
         article[name] = value
-        this.setState({ article })
+        this.setState({article})
     }
 
     handleOnChangeFile(event) {
         const target = event.target
-        this.setState({ selectedFile: target.files[0] })
-        this.setState({ isFilePicked: true })
+        this.setState({selectedFile: target.files[0]})
+        this.setState({isFilePicked: true})
+    }
+
+    componentDidMount() {
+        console.log('componentDidMount');
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        console.log('componentDidUpdate');
     }
 
     handleSubmission(event) {
         event.preventDefault()
         //File Upload
+        let preset = 'direct-upload-preset-myown'
         const formData = new FormData();
-        console.log(this.state.selectedFile)
-        console.log(formData)
-        formData.append('image', this.state.selectedFile)
-        console.log('formData', formData)
+        formData.append('file', this.state.selectedFile)
+        //Tips: Must configure the preset to be able to use the direct upload call api
+        // https://dev.to/ogwurujohnson/cloudinary-image-upload-the-setup-k3h
+        formData.append("upload_preset", preset);
 
-        let settings = {
-            "url": "https://api.imgbb.com/1/upload?key=8d5867a9512390fb5e5dc97839aa36f6",
-            "method": "POST",
-            "timeout": 0,
-            "processData": false,
-            "mimeType": "multipart/form-data",
-            "contentType": false,
-            "data": formData
-        };
+        const callApi = async () => {
+            const data = await fetch(
+                'https://api.cloudinary.com/v1_1/cloudinary-yoshaa-service/image/upload',
+                {
+                    method: 'POST',
+                    body: formData,
+                }
+            )
+                .then((response) => response.json())
+                .then((result) => result)
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
 
-        fetch(settings
-        )
-            .then((response) => {
-                console.log(response)
-                return response.json()
+            return data
+        }
+
+        callApi()
+            .then((res) => {
+                this.savePicture(res)
             })
-            .then((result) => {
-                console.log('Success:', result);
+            .then((res) => {
+                //Save the state data
+                this.handleSubmit()
             })
             .catch((error) => {
                 console.error('Error:', error);
-            });
+            })
     }
 
+    handleSubmit() {
+        let article = this.state.article
+        let user = this.props.user
+        article.author = user.id
+        article.date = Date.now()
 
-    handleOnChangeEditor(data) {
-        const article = { ...this.state.article }
-        article.content = data
-        this.setState({ article })
+        if (article.title.substring(article.title.length, article.title.length - 1) === ' ') {
+            article.title = article.title.substring(0, article.title.length - 1)
+        }
+
+        let formatTitle = article.title
+
+        article.slug = formatTitle.toLowerCase().replaceAll(' ', '-')
+
+        if (article.slug.substring(article.slug.length, article.slug.length - 1) === '-') {
+            article.slug = article.slug.substring(0, article.slug.length - 1)
+        }
+
+        this.props.addNewArticle(article)
     }
 
     render() {
@@ -116,20 +137,23 @@ class UserAddArticles extends Component {
             <div className="wrapper-editor">
                 <h2>Form article - add new one</h2>
 
-                <form className="formArticles mt-5" onSubmit={this.handleSubmit} >
+                <form className="formArticles mt-5" onSubmit={this.handleSubmit}>
                     <div className="form-group col-6">
                         <label htmlFor="title">title</label>
-                        <input type="text" name='title' id='title' onChange={this.handleOnChange} value={article.title} className="form-control"/>
+                        <input type="text" name='title' id='title' onChange={this.handleOnChange} value={article.title}
+                               className="form-control"/>
                     </div>
 
                     <div className="form-group col-6 mb-5">
                         <label htmlFor="published">publishing at</label>
-                        <input type="date" name='published' id='published' onChange={this.handleOnChange} value={article.published} className="form-control"/>
+                        <input type="date" name='published' id='published' onChange={this.handleOnChange}
+                               value={article.published} className="form-control"/>
                     </div>
 
                     <div className="form-group col-6 mb-5">
                         <label htmlFor="file">uploadFile</label>
-                        <input type="file" name='file' id='file' onChange={this.handleOnChangeFile} className="form-control"/>
+                        <input type="file" name='file' id='file' onChange={this.handleOnChangeFile}
+                               className="form-control"/>
                         {this.state.isFilePicked ? (
                             <div>
                                 <p>Filename: {selectedFile.name}</p>
@@ -148,17 +172,19 @@ class UserAddArticles extends Component {
                     <div className="form-group">
                         <label htmlFor="content">Content article</label>
                         <CKEditor
-                            editor={ ClassicEditor }
-                            onChange={ ( event, editor ) => {
+                            editor={ClassicEditor}
+                            onChange={(event, editor) => {
                                 const data = editor.getData();
                                 this.handleOnChangeEditor(data)
-                            } }
+                            }}
 
                             data={article.content}
                         />
                     </div>
 
-                    <button type='submit' className='btn btn-primary mt-3' id='submit' onClick={this.handleSubmission}>SAVE</button>
+                    <button type='submit' className='btn btn-primary mt-3' id='submit'
+                            onClick={this.handleSubmission}>SAVE
+                    </button>
                 </form>
             </div>
         )
