@@ -23,7 +23,12 @@ class Articles extends Component {
                                     />
                                 }/>
 
-                                <Route exact path={`${this.props.match.url}/view-article/:id`} component={ViewArticle}/>
+                                <Route exact path={`${this.props.match.url}/view-article/:id`}  render={(props) =>
+                                    <ViewArticle
+                                        {...props}
+                                        listArticles={this.props.listArticles}
+                                    />
+                                }/>
 
                                 <Route component={Error404}/>
 

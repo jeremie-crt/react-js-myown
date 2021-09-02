@@ -3,7 +3,6 @@ import {CKEditor} from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 import './UserArticles.css'
-import {Form} from "react-bootstrap";
 
 class UserAddArticles extends Component {
     constructor(props) {
@@ -11,6 +10,7 @@ class UserAddArticles extends Component {
         this.state = {
             article: {
                 title: '',
+                introduction: '',
                 content: '',
                 author: '',
                 slug: '',
@@ -70,6 +70,14 @@ class UserAddArticles extends Component {
 
     handleSubmission(event) {
         event.preventDefault()
+        if(this.state.isFilePicked) {
+            this.uploadToCloudinary()
+        } else {
+            this.handleSubmit()
+        }
+    }
+
+    uploadToCloudinary() {
         //File Upload
         let preset = 'direct-upload-preset-myown'
         const formData = new FormData();
@@ -142,6 +150,12 @@ class UserAddArticles extends Component {
                         <label htmlFor="title">title</label>
                         <input type="text" name='title' id='title' onChange={this.handleOnChange} value={article.title}
                                className="form-control"/>
+                    </div>
+
+                    <div className="form-group col-6">
+                        <label htmlFor="introduction">introduction</label>
+                        <textarea name='introduction' id='introduction' cols="10" rows="3"
+                        className='form-control' onChange={this.handleOnChange} value={article.introduction} > </textarea>
                     </div>
 
                     <div className="form-group col-6 mb-5">

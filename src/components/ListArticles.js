@@ -1,5 +1,6 @@
-import React, { Component } from 'react'
-import { Link } from "react-router-dom";
+import React, {Component} from 'react'
+import {Link} from "react-router-dom";
+import {capitalizeFirstLetter, reduceTextLength} from "../Utils";
 
 class ListArticles extends Component {
 
@@ -10,43 +11,51 @@ class ListArticles extends Component {
     }
 
     render() {
-
-        function createMarkup(text) {
-            return {__html: text}
-        }
-        function reduceTextLength(text, start, end) {
-            return text.substr(0, 150)
-        }
-
+        //Single Card Component
         const card = (data, index) => {
 
-            let textContent = createMarkup( reduceTextLength(data.content, 0, 150).toLowerCase() + '...')
+            let textContent = reduceTextLength(data.introduction, 0, 150)
+                .toLowerCase() + '...'
 
             return (
-                <div key={index} className="card" style={{width: '18rem'}}>
-                    <img className="card-img-top" src={data.picture.url} alt="Card image cap"/>
-                        <div className="card-body">
+                <div key={index} className="col-sm-4 mb-3" style={{maxHeight: '485px'}}>
+                    <div className="card" style={{height: '100%'}}>
+                        <Link to={`view-article/${data.slug}`} className="card-link">
+                            <div className="card-header" style={{height: '250px', minHeight: '250px'}}>
+                                <img className="card-img-top" src={data.picture.url} alt={data.title}
+                                     style={{height: '100%', width: '100%'}}
+                                />
+                            </div>
+                        </Link>
+                        <div className="card-body mt-2">
                             <h5 className="card-title">{data.title}</h5>
-                                <div className="card-text" dangerouslySetInnerHTML={textContent}/>
-                            <Link to={`view-article/${data.slug}`} className="card-link">See article</Link>
+                            <div className="card-text mb-2">
+                                {capitalizeFirstLetter(textContent)}
+                            </div>
+                            <Link to={`view-article/${data.slug}`} className="card-link">
+                                <a href="/">Read article</a>
+                            </Link>
                         </div>
+                    </div>
                 </div>
             )
-           }
+        }
 
-        let cards = Object.keys(this.listArticles).map((item, index) =>
-            card(this.listArticles[item], index)
-        )
+        let cards = Object
+            .keys(this.listArticles)
+            .map((item, index) =>
+                card(this.listArticles[item], index)
+            )
 
         return (
-           <section className="container">
-               <div className="row">
-                   <p>List of articles: {this.amountArticles}</p>
-               </div>
-               <div className="row">
-                   {cards}
-               </div>
-           </section>
+            <section className="container">
+                <div className="row">
+                    <p>List of articles: {this.amountArticles}</p>
+                </div>
+                <div className="row">
+                    {cards}
+                </div>
+            </section>
         )
     }
 }
