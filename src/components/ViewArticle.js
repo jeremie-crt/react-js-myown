@@ -9,6 +9,7 @@ class ViewArticle extends Component {
         const listArticles = this.props.listArticles
 
         let article;
+        //Get the corresponding article in the list by the id params
         Object.keys(listArticles).forEach(item => {
             if (listArticles.hasOwnProperty(item)) {
                 if (idArticle === listArticles[item].slug) {
@@ -40,7 +41,6 @@ class ViewArticle extends Component {
                         >
                         </div>
                     </div>
-
                 </div>
             </div>
         )

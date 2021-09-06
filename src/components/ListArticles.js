@@ -29,9 +29,7 @@ class ListArticles extends Component {
                         </Link>
                         <div className="card-body mt-2">
                             <h5 className="card-title">{data.title}</h5>
-                            <div className="card-text mb-2">
-                                {capitalizeFirstLetter(textContent)}
-                            </div>
+                            <div className="card-text mb-2" dangerouslySetInnerHTML={{__html: capitalizeFirstLetter(textContent)}}/>
                             <Link to={`view-article/${data.slug}`} className="card-link">
                                 <a href="/">Read article</a>
                             </Link>

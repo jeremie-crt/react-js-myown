@@ -60,14 +60,6 @@ class UserAddArticles extends Component {
         this.setState({isFilePicked: true})
     }
 
-    componentDidMount() {
-        console.log('componentDidMount');
-    }
-
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        console.log('componentDidUpdate');
-    }
-
     handleSubmission(event) {
         event.preventDefault()
         if(this.state.isFilePicked) {
