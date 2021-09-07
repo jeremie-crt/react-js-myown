@@ -20,8 +20,10 @@ class UserAddArticles extends Component {
                 poster: '',
                 background: '',
             },
-            selectedFile: '',
-            isFilePicked: false,
+            selectedFilePicture: '',
+            isPicturePicked: false,
+            selectedFilePoster: '',
+            isPosterPicked: false,
         }
 
         this.handleSubmit = this.handleSubmit.bind(this)
@@ -56,20 +58,33 @@ class UserAddArticles extends Component {
 
     handleOnChangeFile(event) {
         const target = event.target
-        this.setState({selectedFile: target.files[0]})
-        this.setState({isFilePicked: true})
+        switch (target.id) {
+            case 'picture':
+                this.setState({selectedFilePicture: target.files[0]})
+                this.setState({isPicturePicked: true})
+                break
+            ;
+            case 'poster':
+                this.setState({selectedFilePoster: target.files})
+                this.setState({isPosterPicked: true})
+                break
+            ;
+            default:
+                break;
+        }
     }
 
     handleSubmission(event) {
         event.preventDefault()
-        if(this.state.isFilePicked) {
-            this.uploadToCloudinary()
-        } else {
-            this.handleSubmit()
-        }
+        this.uploadToNodeServer()
+        //if(this.state.isPicturePicked) {
+        //    this.uploadToCloudinary()
+        //} else {
+        //    this.handleSubmit()
+        //}
     }
 
-    uploadToCloudinary() {
+    /*uploadToCloudinary() {
         //File Upload
         let preset = 'direct-upload-preset-myown'
         const formData = new FormData();
@@ -106,6 +121,53 @@ class UserAddArticles extends Component {
             .catch((error) => {
                 console.error('Error:', error);
             })
+    }*/
+
+    uploadToNodeServer() {
+        //File Upload
+        //let preset = 'direct-upload-preset-myown'
+        const formData = new FormData();
+
+        for(var i = 0; i < this.state.selectedFilePoster.length; i++) {
+            formData.append('file', this.state.selectedFilePoster[i])
+        }
+        //Tips: Must configure the preset to be able to use the direct upload call api
+        // https://dev.to/ogwurujohnson/cloudinary-image-upload-the-setup-k3h
+        //formData.append("upload_preset", preset);
+
+        const callApi = async () => {
+            const data = await fetch(
+                'http://localhost:8000/upload',
+                {
+                    method: 'POST',
+                    body: formData,
+                }
+            )
+                .then(res => { // then print response status
+                    console.log('res')
+                    console.log(res)
+                    return res
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+
+            return data
+        }
+
+        callApi()
+            .then((res) => {
+                //this.savePicture(res)
+                console.log('callApi')
+                console.log(res)
+            })
+            .then((res) => {
+                //Save the state data
+                //this.handleSubmit()
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            })
     }
 
     handleSubmit() {
@@ -131,13 +193,14 @@ class UserAddArticles extends Component {
 
     render() {
         const article = this.state.article
-        const selectedFile = this.state.selectedFile
+        const selectedFilePicture = this.state.selectedFilePicture
+        const selectedFilePoster = this.state.selectedFilePoster
 
         return (
             <div className="wrapper-editor">
                 <h2>Form article - add new one</h2>
 
-                <form className="formArticles mt-5" onSubmit={this.handleSubmit}>
+                <form className="formArticles mt-5" onSubmit={this.handleSubmit} encType='multipart/form-data'>
                     <div className="form-group col-6">
                         <label htmlFor="title">title</label>
                         <input type="text" name='title' id='title' onChange={this.handleOnChange} value={article.title}
@@ -157,18 +220,31 @@ class UserAddArticles extends Component {
                     </div>
 
                     <div className="form-group col-6 mb-5">
-                        <label htmlFor="file">uploadFile</label>
-                        <input type="file" name='file' id='file' onChange={this.handleOnChangeFile}
+                        <label htmlFor="picture">Picture</label>
+                        <input type="file" name='picture' id='picture' onChange={this.handleOnChangeFile}
                                className="form-control"/>
-                        {this.state.isFilePicked ? (
+                        {this.state.isPicturePicked ? (
                             <div>
-                                <p>Filename: {selectedFile.name}</p>
-                                <p>Filetype: {selectedFile.type}</p>
-                                <p>Size in bytes: {selectedFile.size}</p>
+                                <p>Filename: {selectedFilePicture.name}</p>
+                                <p>Filetype: {selectedFilePicture.type}</p>
+                                <p>Size in bytes: {selectedFilePicture.size}</p>
                                 <p>
                                     lastModifiedDate:{' '}
-                                    {selectedFile.lastModifiedDate.toLocaleDateString()}
+                                    {selectedFilePicture.lastModifiedDate.toLocaleDateString()}
                                 </p>
+                            </div>
+                        ) : (
+                            <p>Select a file to show details</p>
+                        )}
+                    </div>
+
+                    <div className="form-group col-6 mb-5">
+                        <label htmlFor="poster">Poster</label>
+                        <input type="file" name='poster' multiple id='poster' onChange={this.handleOnChangeFile} className="form-control"/>
+                        {this.state.isPosterPicked ?
+                            (
+                            <div>
+                                <p>Filename: {selectedFilePoster.length}</p>
                             </div>
                         ) : (
                             <p>Select a file to show details</p>
