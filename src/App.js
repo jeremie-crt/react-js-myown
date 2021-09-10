@@ -22,6 +22,29 @@ import Logout from "./components/Logout";
 //Imported Context
 import sessionContext from "./MyContext";
 
+// Import the functions you need from the SDKs you need
+import { getDatabase, ref, set, onValue, update } from "firebase/database";
+import { initializeApp } from "firebase/app";
+import Rebase from 're-base'
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+    apiKey: "AIzaSyC9fu46SG451ANUMpz_ALAdiirPbzviCSc",
+    authDomain: "react-myown-3b8c5.firebaseapp.com",
+    databaseURL: "https://react-myown-3b8c5-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "react-myown-3b8c5",
+    storageBucket: "react-myown-3b8c5.appspot.com",
+    messagingSenderId: "424848653557",
+    appId: "1:424848653557:web:c7c611540a19319ceed9bc"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const database = getDatabase();
+//const reBase = Rebase.createClass(database)
+
 class App extends Component {
     constructor(props) {
         super(props);
@@ -62,6 +85,60 @@ class App extends Component {
         this.addNewArticle = this.addNewArticle.bind(this)
     }
 
+    componentDidMount() {
+        console.log('componentDidMountcomponentDidMountcomponentDidMount');
+        /*reBase.syncState('users', {
+            context: this,
+            asArray: true,
+            state: 'users',
+        })*/
+        // let urlInDb = ['users', 'usersInfos', 'list-articles']
+        // const usersData = ref(database, 'users');
+        // const usersInfosData = ref(database, 'usersInfos');
+        // const listArticlesData = ref(database, 'list-articles');
+        //
+        // onValue(usersData, (snapshot) => {
+        //     const users = snapshot.val();
+        //     console.log(users);
+        //     this.setState( {users})
+        // });
+        // onValue(usersInfosData, (snapshot) => {
+        //     const usersInfos = snapshot.val();
+        //     console.log(usersInfos);
+        //     this.setState( {usersInfos})
+        // });
+        // onValue(listArticlesData, (snapshot) => {
+        //     const listArticles = snapshot.val();
+        //     console.log(listArticles);
+        //     this.setState( {listArticles})
+        // });
+
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        console.log('componentDidUpdatecomponentDidUpdatecomponentDidUpdate');
+
+        let users = this.state.users
+        let listArticles = this.state.listArticles
+        let usersInfos = this.state.usersInfos
+
+        const updates = {};
+        updates['/users/'] = users;
+        updates['/users-infos/'] = usersInfos;
+        updates['/list-articles/'] = listArticles;
+
+        return update(ref(database), updates);
+    }
+
+    addNewArticle(data) {
+        //add new user to all list users
+        const listArticles = { ...this.state.listArticles }
+        let id = `article-${data.date}`
+        listArticles[id] = data
+
+        this.setState({ listArticles })
+    }
+
     saveNewUser(username, pw) {
         let user = {
             username: username,
@@ -80,15 +157,6 @@ class App extends Component {
         this.setState({session})
 
         this.logInUser(id, users)
-    }
-
-    addNewArticle(data) {
-        //add new user to all list users
-        const listArticles = { ...this.state.listArticles }
-        let id = `article-${data.date}`
-        listArticles[id] = data
-
-        this.setState({ listArticles })
     }
 
     //Save user info into the session
